@@ -115,736 +115,737 @@
 
 	<script>
 		require([
-					'esri/Map',
-					'esri/views/MapView',
-					'esri/Basemap',
-					'esri/layers/WebTileLayer',
-					'esri/widgets/Search',
-					'esri/widgets/BasemapToggle',
-					'esri/widgets/ScaleBar',
-					'esri/widgets/Sketch',
-					'esri/widgets/Track',
-					'esri/Graphic',
-					'esri/layers/GraphicsLayer',
-					'esri/geometry/geometryEngine',
-					'esri/widgets/BasemapGallery',
-					'esri/widgets/Locate',
-					'esri/views/draw/Draw',
-					'esri/geometry/SpatialReference',
-					'esri/geometry/Extent',
-					'esri/layers/support/TileInfo',
-					'esri/geometry/Polyline',
-					'esri/symbols/TextSymbol',
-					'esri/geometry/Point',
-					'esri/geometry/Polygon',
-				], function(
-					Map,
-					MapView,
-					Basemap,
-					WebTileLayer,
-					Search,
-					BasemapToggle,
-					ScaleBar,
-					Sketch,
-					Track,
-					Graphic,
-					GraphicsLayer,
-					geometryEngine,
-					BasemapGallery,
-					Locate,
-					Draw,
-					SpatialReference,
-					Extent,
-					TileInfo,
-					Polyline,
-					TextSymbol,
-					Point,
-					Polygon
-				) {
-					let darObj = null;
-					var wkid = 4326;
-					let locateWidget = null;
+			'esri/Map',
+			'esri/views/MapView',
+			'esri/Basemap',
+			'esri/layers/WebTileLayer',
+			'esri/widgets/Search',
+			'esri/widgets/BasemapToggle',
+			'esri/widgets/ScaleBar',
+			'esri/widgets/Sketch',
+			'esri/widgets/Track',
+			'esri/Graphic',
+			'esri/layers/GraphicsLayer',
+			'esri/geometry/geometryEngine',
+			'esri/widgets/BasemapGallery',
+			'esri/widgets/Locate',
+			'esri/views/draw/Draw',
+			'esri/geometry/SpatialReference',
+			'esri/geometry/Extent',
+			'esri/layers/support/TileInfo',
+			'esri/geometry/Polyline',
+			'esri/symbols/TextSymbol',
+			'esri/geometry/Point',
+			'esri/geometry/Polygon',
+		], function(
+			Map,
+			MapView,
+			Basemap,
+			WebTileLayer,
+			Search,
+			BasemapToggle,
+			ScaleBar,
+			Sketch,
+			Track,
+			Graphic,
+			GraphicsLayer,
+			geometryEngine,
+			BasemapGallery,
+			Locate,
+			Draw,
+			SpatialReference,
+			Extent,
+			TileInfo,
+			Polyline,
+			TextSymbol,
+			Point,
+			Polygon
+		) {
+			let darObj = null;
+			var wkid = 4326;
+			let locateWidget = null;
 
-					var tdtConfig = {
-						serverUrl: 'http://{subDomain}.tianditu.gov.cn/DataServer',
-						tk: '5bcc356651959d00e04aba3c1063d66e',
-						subDomains: ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'],
-					};
+			var tdtConfig = {
+				serverUrl: 'http://{subDomain}.tianditu.gov.cn/DataServer',
+				tk: '5bcc356651959d00e04aba3c1063d66e',
+				subDomains: ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'],
+			};
 
-					var titleInfo = {
-						dpi: 90.71428571427429,
-						format: 'image/png',
-						compressionQuality: 0,
-						rows: 256,
-						cols: 256,
-						origin: {
-							x: -180,
-							y: 90,
-						},
-						lods: [{
-								level: 2,
-								levelValue: 2,
-								resolution: 0.3515625,
-								scale: 147748796.52937502,
-							},
-							{
-								level: 3,
-								levelValue: 3,
-								resolution: 0.17578125,
-								scale: 73874398.264687508,
-							},
-							{
-								level: 4,
-								levelValue: 4,
-								resolution: 0.087890625,
-								scale: 36937199.132343754,
-							},
-							{
-								level: 5,
-								levelValue: 5,
-								resolution: 0.0439453125,
-								scale: 18468599.566171877,
-							},
-							{
-								level: 6,
-								levelValue: 6,
-								resolution: 0.02197265625,
-								scale: 9234299.7830859385,
-							},
-							{
-								level: 7,
-								levelValue: 7,
-								resolution: 0.010986328125,
-								scale: 4617149.8915429693,
-							},
-							{
-								level: 8,
-								levelValue: 8,
-								resolution: 0.0054931640625,
-								scale: 2308574.9457714846,
-							},
-							{
-								level: 9,
-								levelValue: 9,
-								resolution: 0.00274658203125,
-								scale: 1154287.4728857423,
-							},
-							{
-								level: 10,
-								levelValue: 10,
-								resolution: 0.001373291015625,
-								scale: 577143.73644287116,
-							},
-							{
-								level: 11,
-								levelValue: 11,
-								resolution: 0.0006866455078125,
-								scale: 288571.86822143558,
-							},
-							{
-								level: 12,
-								levelValue: 12,
-								resolution: 0.00034332275390625,
-								scale: 144285.93411071779,
-							},
-							{
-								level: 13,
-								levelValue: 13,
-								resolution: 0.000171661376953125,
-								scale: 72142.967055358895,
-							},
-							{
-								level: 14,
-								levelValue: 14,
-								resolution: 8.58306884765625e-5,
-								scale: 36071.483527679447,
-							},
-							{
-								level: 15,
-								levelValue: 15,
-								resolution: 4.291534423828125e-5,
-								scale: 18035.741763839724,
-							},
-							{
-								level: 16,
-								levelValue: 16,
-								resolution: 2.1457672119140625e-5,
-								scale: 9017.8708819198619,
-							},
-							{
-								level: 17,
-								levelValue: 17,
-								resolution: 1.0728836059570313e-5,
-								scale: 4508.9354409599309,
-							},
-							{
-								level: 18,
-								levelValue: 18,
-								resolution: 5.3644180297851563e-6,
-								scale: 2254.4677204799655,
-							},
-							{
-								level: 19,
-								levelValue: 19,
-								resolution: 2.68220901489257815e-6,
-								scale: 1127.23386023998275,
-							},
-							{
-								level: 20,
-								levelValue: 20,
-								resolution: 1.341104507446289075e-6,
-								scale: 563.616930119991375,
-							},
-						],
-					};
+			var titleInfo = {
+				dpi: 90.71428571427429,
+				format: 'image/png',
+				compressionQuality: 0,
+				rows: 256,
+				cols: 256,
+				origin: {
+					x: -180,
+					y: 90,
+				},
+				lods: [{
+						level: 2,
+						levelValue: 2,
+						resolution: 0.3515625,
+						scale: 147748796.52937502,
+					},
+					{
+						level: 3,
+						levelValue: 3,
+						resolution: 0.17578125,
+						scale: 73874398.264687508,
+					},
+					{
+						level: 4,
+						levelValue: 4,
+						resolution: 0.087890625,
+						scale: 36937199.132343754,
+					},
+					{
+						level: 5,
+						levelValue: 5,
+						resolution: 0.0439453125,
+						scale: 18468599.566171877,
+					},
+					{
+						level: 6,
+						levelValue: 6,
+						resolution: 0.02197265625,
+						scale: 9234299.7830859385,
+					},
+					{
+						level: 7,
+						levelValue: 7,
+						resolution: 0.010986328125,
+						scale: 4617149.8915429693,
+					},
+					{
+						level: 8,
+						levelValue: 8,
+						resolution: 0.0054931640625,
+						scale: 2308574.9457714846,
+					},
+					{
+						level: 9,
+						levelValue: 9,
+						resolution: 0.00274658203125,
+						scale: 1154287.4728857423,
+					},
+					{
+						level: 10,
+						levelValue: 10,
+						resolution: 0.001373291015625,
+						scale: 577143.73644287116,
+					},
+					{
+						level: 11,
+						levelValue: 11,
+						resolution: 0.0006866455078125,
+						scale: 288571.86822143558,
+					},
+					{
+						level: 12,
+						levelValue: 12,
+						resolution: 0.00034332275390625,
+						scale: 144285.93411071779,
+					},
+					{
+						level: 13,
+						levelValue: 13,
+						resolution: 0.000171661376953125,
+						scale: 72142.967055358895,
+					},
+					{
+						level: 14,
+						levelValue: 14,
+						resolution: 8.58306884765625e-5,
+						scale: 36071.483527679447,
+					},
+					{
+						level: 15,
+						levelValue: 15,
+						resolution: 4.291534423828125e-5,
+						scale: 18035.741763839724,
+					},
+					{
+						level: 16,
+						levelValue: 16,
+						resolution: 2.1457672119140625e-5,
+						scale: 9017.8708819198619,
+					},
+					{
+						level: 17,
+						levelValue: 17,
+						resolution: 1.0728836059570313e-5,
+						scale: 4508.9354409599309,
+					},
+					{
+						level: 18,
+						levelValue: 18,
+						resolution: 5.3644180297851563e-6,
+						scale: 2254.4677204799655,
+					},
+					{
+						level: 19,
+						levelValue: 19,
+						resolution: 2.68220901489257815e-6,
+						scale: 1127.23386023998275,
+					},
+					{
+						level: 20,
+						levelValue: 20,
+						resolution: 1.341104507446289075e-6,
+						scale: 563.616930119991375,
+					},
+				],
+			};
 
-					var extent = new Extent(
-						116.17,
-						39.83,
-						116.61,
-						39.98,
-						new SpatialReference({
-							wkid: 4326,
-						})
+			var extent = new Extent(
+				116.17,
+				39.83,
+				116.61,
+				39.98,
+				new SpatialReference({
+					wkid: 4326,
+				})
+			);
+
+			var spatialReference = new SpatialReference({
+				wkid: wkid,
+			});
+
+			titleInfo.spatialReference = new SpatialReference({
+				wkid: wkid,
+			});
+
+			var tileInfo = new TileInfo(titleInfo);
+			var {
+				serverUrl,
+				subDomains,
+				tk
+			} = tdtConfig;
+
+			var vecLayer = new WebTileLayer({
+				urlTemplate: `${serverUrl}?T=vec_c&x={col}&y={row}&l={level}&tk=${tk}`,
+				subDomains,
+				tileInfo,
+				spatialReference,
+			});
+
+			var imgLayer = new WebTileLayer({
+				urlTemplate: `${serverUrl}?T=img_c&x={col}&y={row}&l={level}&tk=${tk}`,
+				subDomains,
+				tileInfo,
+				spatialReference,
+			});
+			// 矢量标注
+			var ciaLayer1 = new WebTileLayer({
+				urlTemplate: `${serverUrl}?T=cva_c&x={col}&y={row}&l={level}&tk=${tk}`,
+				subDomains,
+				tileInfo,
+				spatialReference,
+			});
+			// 影像标注
+			var ciaLayer2 = new WebTileLayer({
+				urlTemplate: `${serverUrl}?T=cia_c&x={col}&y={row}&l={level}&tk=${tk}`,
+				subDomains,
+				tileInfo,
+				spatialReference,
+			});
+
+			var vectoBasemap = new Basemap({
+				baseLayers: [vecLayer, ciaLayer1],
+				title: 'vectoBasemap',
+				id: 'vectoBasemap',
+			});
+
+			var imageBasemap = new Basemap({
+				baseLayers: [imgLayer, ciaLayer2],
+				title: 'imageBasemap',
+				id: 'imageBasemap',
+			});
+
+			var map = new Map({
+				basemap: imageBasemap, // 默认影像图
+			});
+
+			var view = new MapView({
+				container: 'viewDiv',
+				extent,
+				map,
+				// id: mapId,
+				center: [116.423816, 39.923125],
+				zoom: 12,
+				ui: {
+					components: [],
+				},
+				constraints: {
+					rotationEnabled: false, // 禁止旋转
+					// maxZoom: 9
+				},
+			});
+
+			// var search = new Search({ //Add Search widget
+			// 	view: view
+			// });
+			// view.ui.add(search, "top-right");
+
+			// const basemapToggle = new BasemapToggle({
+			// 	view: view,
+			// 	nextBasemap: bm_vec,
+			// });
+			// view.ui.add(basemapToggle, "bottom-right");
+
+			//去掉logo
+			view.ui.remove('attribution');
+			//移除放大缩小按钮
+			view.ui.remove('zoom');
+
+			// var basemapGallery = new BasemapGallery({
+			// 	view: view,
+			// 	source: basemaps
+			// });
+			// view.ui.add(basemapGallery, {
+			// 	position: "top-right"
+			// });
+
+			// 添加比例尺
+			// const scalebar = new ScaleBar({
+			// 	view: view,
+			// 	unit: "metric"
+			// });
+			// view.ui.add(scalebar, "bottom-right");
+
+			// 添加草图小部件
+			const graphicsLayer = new GraphicsLayer();
+			map.add(graphicsLayer);
+			// const sketch = new Sketch({
+			// 	layer: graphicsLayer,
+			// 	view: view,
+			// 	//
+			// 	availableCreateTools: ["polyline", "polygon"],
+			// 	creationMode: "update",
+			// 	updateOnGraphicClick: true,
+			// 	defaultCreateOptions: {
+			// 		mode : "hybrid"
+			// 	},
+			// 	visibleElements: {
+			// 		createTools: {
+			// 			polyline: false,
+			// 			polygon: false,
+			// 			rectangle: false,
+			// 			circle: false,
+			// 		},
+			// 		selectionTools: {
+			// 			"lasso-selection": true,
+			// 			"rectangle-selection": false,
+			// 		},
+			// 		settingsMenu: false,
+			// 		undoRedoMenu: false,
+			// 	},
+			// });
+			// view.ui.add(sketch, "top-right");
+
+			const measurements = document.getElementById('measurements');
+			view.ui.add(measurements, 'manual');
+
+			// 创建测量默认图形
+			// const polygon = {
+			// 	type: "polygon",
+			// 	spatialReference: {
+			// 		wkid: 3857,
+			// 	},
+			// 	rings: [
+			// 		[
+			// 			[-4508069.082189632, 3599936.936171892],
+			// 			[-4508069.082189632, 5478453.343307884],
+			// 			[-2629552.6750536393, 5478453.343307884],
+			// 			[-2629552.6750536393, 3599936.936171892],
+			// 			[-4508069.082189632, 3599936.936171892],
+			// 		],
+			// 	],
+			// };
+			// let locateWidget = new Locate({
+			// 	view: view, // Attaches the Locate button to the view
+			// 	graphic: new Graphic({
+			// 		symbol: {
+			// 			type: 'simple-marker',
+			// 			color: 'red',
+			// 			size: 12,
+			// 			outline: {
+			// 				// autocasts as new SimpleLineSymbol()
+			// 				width: 2,
+			// 				color: '#ffffff',
+			// 			},
+			// 		}, // overwrites the default symbol used for the
+			// 		// graphic placed at the location of the user when found
+			// 	}),
+			// });
+
+			// view.ui.add(locateWidget, 'bottom-right');
+
+			// const simplePolygonSymbol = {
+			// 	type: "simple-fill",
+			// 	outline: {
+			// 		color: [200, 0, 0],
+			// 		width: 2,
+			// 	},
+			// };
+
+			// const polygonGraphic = new Graphic({
+			// 	geometry: polygon,
+			// 	symbol: simplePolygonSymbol
+			// });
+
+			// graphicsLayer.add(polygonGraphic);
+
+			// view.when(() => {
+			// 	sketch.update(polygonGraphic);
+			// 	getArea(polygonGraphic.geometry);
+			// });
+
+			// sketch.on("create", (e) => {
+
+			// 	if (e.toolEventInfo && e.toolEventInfo.type === "vertex-add") {
+			// 		console.log(e)
+			// 	}
+			// 	// console.log(e)
+			// 	if (e.state === "start") {
+
+			// 		console.log('start: ', e);
+			// 	}
+
+			// 	if (e.state === 'complete') {
+			// 		console.log('complete: ', e);
+			// 	}
+
+			// })
+
+			// sketch.on("update", (e) => {
+			// 	const geometry = e.graphics[0].geometry;
+			// 	if (e.state === "start") {
+			// 		switchType(geometry);
+			// 	}
+
+			// 	if (e.state === "complete") {
+
+			// 		graphicsLayer.remove(graphicsLayer.graphics.getItemAt(0));
+			// 		measurements.innerHTML = null;
+			// 	}
+
+			// 	if (
+			// 		e.toolEventInfo &&
+			// 		(e.toolEventInfo.type === "scale-stop" ||
+			// 			e.toolEventInfo.type === "reshape-stop" ||
+			// 			e.toolEventInfo.type === "move-stop")
+			// 	) {
+			// 		switchType(geometry);
+			// 	}
+			// });
+
+			function createText(vertex, text) {
+				const [lon, lat] = vertex;
+
+				let textSymbol = {
+					type: 'text',
+					color: [0, 170, 255, 0.8],
+					haloColor: 'black',
+					haloSize: 1,
+					text: text,
+					xoffset: 40,
+					yoffset: 8,
+					// borderLineColor : 'red',
+					font: {
+						size: 14,
+						weight: 'bold',
+					},
+				};
+				const point = new Point({
+					longitude: lon,
+					latitude: lat,
+				});
+
+				const pointGraphic = new Graphic({
+					geometry: point,
+					symbol: textSymbol,
+				});
+
+				// view.graphics.addMany([textSymbol])
+				return pointGraphic;
+			}
+
+			function startLineDraw() {
+				let lineGraphics = [];
+				let textGraphics = [];
+
+				if (!darObj) {
+					darObj = new Draw({
+						view: view,
+					});
+				}
+
+				let action = darObj.create('polyline', {
+					mode: 'hybrid',
+				});
+
+				action.on('vertex-add', function(evt) {
+					measureLine(
+						evt.vertices,
+						evt.target.history[evt.target.history.length - 1].vertex,
+						'add'
 					);
+				});
 
-					var spatialReference = new SpatialReference({
-						wkid: wkid,
-					});
+				action.on('cursor-update', function(evt) {
+					// measureLine(evt.vertices);
+				});
 
-					titleInfo.spatialReference = new SpatialReference({
-						wkid: wkid,
-					});
+				action.on('draw-complete', function(evt) {
+					measureLine(evt.vertices);
+					textGraphics = [];
+					lineGraphics = [];
+				});
 
-					var tileInfo = new TileInfo(titleInfo);
-					var {
-						serverUrl,
-						subDomains,
-						tk
-					} = tdtConfig;
+				action.on('vertex-remove', function(evt) {
+					// measureLine(evt.vertices);
+				});
 
-					var vecLayer = new WebTileLayer({
-						urlTemplate: `${serverUrl}?T=vec_c&x={col}&y={row}&l={level}&tk=${tk}`,
-						subDomains,
-						tileInfo,
+				function measureLine(vertices, vertex, type) {
+					view.graphics.removeAll();
+
+					let line = createLine(vertices);
+					let lineLength = geometryEngine.geodesicLength(line, 'meters');
+					let lengthText = (lineLength).toFixed(2) + '米';
+
+					let graphic = createGraphic(line);
+					if (type == 'add') {
+						let textGraphic = createText(vertex, lengthText);
+						lineGraphics = [];
+						lineGraphics.push(graphic);
+						textGraphics.push(textGraphic);
+						view.graphics.addMany([graphic, textGraphic]);
+					} else {
+						lineGraphics = [];
+						lineGraphics.push(graphic);
+						view.graphics.add(graphic);
+					}
+				}
+
+				function createLine(vertices) {
+					let polyline = new Polyline({
+						hasZ: false,
+						hasM: true,
+						paths: vertices,
 						spatialReference,
 					});
+					return polyline;
+				}
 
-					var imgLayer = new WebTileLayer({
-						urlTemplate: `${serverUrl}?T=img_c&x={col}&y={row}&l={level}&tk=${tk}`,
-						subDomains,
-						tileInfo,
+				function createGraphic(line) {
+					let polylineSymbol = {
+						type: 'simple-line', // autocasts as SimpleLineSymbol()
+						color: [226, 119, 40],
+						width: 4,
+					};
+
+					return new Graphic({
+						geometry: line,
+						symbol: polylineSymbol,
 						spatialReference,
 					});
-					// 矢量标注
-					var ciaLayer1 = new WebTileLayer({
-						urlTemplate: `${serverUrl}?T=cva_c&x={col}&y={row}&l={level}&tk=${tk}`,
-						subDomains,
-						tileInfo,
-						spatialReference,
+				}
+			}
+
+			function startArea() {
+				let textGraphics = [];
+
+				if (!darObj) {
+					darObj = new Draw({
+						view: view,
 					});
-					// 影像标注
-					var ciaLayer2 = new WebTileLayer({
-						urlTemplate: `${serverUrl}?T=cia_c&x={col}&y={row}&l={level}&tk=${tk}`,
-						subDomains,
-						tileInfo,
-						spatialReference,
-					});
+				}
 
-					var vectoBasemap = new Basemap({
-						baseLayers: [vecLayer, ciaLayer1],
-						title: 'vectoBasemap',
-						id: 'vectoBasemap',
-					});
+				let action = darObj.create('polygon', {
+					mode: 'hybrid',
+				});
 
-					var imageBasemap = new Basemap({
-						baseLayers: [imgLayer, ciaLayer2],
-						title: 'imageBasemap',
-						id: 'imageBasemap',
-					});
+				action.on('vertex-add', function(evt) {
+					measureLine(evt.vertices, 'add');
+				});
 
-					var map = new Map({
-						basemap: imageBasemap, // 默认影像图
-					});
+				// fires when the pointer moves
+				action.on('cursor-update', function(evt) {
+					// measureLine(evt.vertices);
+				});
 
-					var view = new MapView({
-						container: 'viewDiv',
-						extent,
-						map,
-						// id: mapId,
-						center: [116.423816, 39.923125],
-						zoom: 12,
-						ui: {
-							components: [],
-						},
-						constraints: {
-							rotationEnabled: false, // 禁止旋转
-							// maxZoom: 9
-						},
-					});
+				// fires when the drawing is completed
+				action.on('draw-complete', function(evt) {
+					// measureLine(evt.vertices);
+				});
 
-					// var search = new Search({ //Add Search widget
-					// 	view: view
-					// });
-					// view.ui.add(search, "top-right");
+				// fires when a vertex is removed
+				action.on('vertex-remove', function(evt) {
+					// measureLine(evt.vertices);
+				});
 
-					// const basemapToggle = new BasemapToggle({
-					// 	view: view,
-					// 	nextBasemap: bm_vec,
-					// });
-					// view.ui.add(basemapToggle, "bottom-right");
-
-					//去掉logo
-					view.ui.remove('attribution');
-					//移除放大缩小按钮
-					view.ui.remove('zoom');
-
-					// var basemapGallery = new BasemapGallery({
-					// 	view: view,
-					// 	source: basemaps
-					// });
-					// view.ui.add(basemapGallery, {
-					// 	position: "top-right"
-					// });
-
-					// 添加比例尺
-					// const scalebar = new ScaleBar({
-					// 	view: view,
-					// 	unit: "metric"
-					// });
-					// view.ui.add(scalebar, "bottom-right");
-
-					// 添加草图小部件
-					const graphicsLayer = new GraphicsLayer();
-					map.add(graphicsLayer);
-					// const sketch = new Sketch({
-					// 	layer: graphicsLayer,
-					// 	view: view,
-					// 	//
-					// 	availableCreateTools: ["polyline", "polygon"],
-					// 	creationMode: "update",
-					// 	updateOnGraphicClick: true,
-					// 	defaultCreateOptions: {
-					// 		mode : "hybrid"
-					// 	},
-					// 	visibleElements: {
-					// 		createTools: {
-					// 			polyline: false,
-					// 			polygon: false,
-					// 			rectangle: false,
-					// 			circle: false,
-					// 		},
-					// 		selectionTools: {
-					// 			"lasso-selection": true,
-					// 			"rectangle-selection": false,
-					// 		},
-					// 		settingsMenu: false,
-					// 		undoRedoMenu: false,
-					// 	},
-					// });
-					// view.ui.add(sketch, "top-right");
-
-					const measurements = document.getElementById('measurements');
-					view.ui.add(measurements, 'manual');
-
-					// 创建测量默认图形
-					// const polygon = {
-					// 	type: "polygon",
-					// 	spatialReference: {
-					// 		wkid: 3857,
-					// 	},
-					// 	rings: [
-					// 		[
-					// 			[-4508069.082189632, 3599936.936171892],
-					// 			[-4508069.082189632, 5478453.343307884],
-					// 			[-2629552.6750536393, 5478453.343307884],
-					// 			[-2629552.6750536393, 3599936.936171892],
-					// 			[-4508069.082189632, 3599936.936171892],
-					// 		],
-					// 	],
-					// };
-					// let locateWidget = new Locate({
-					// 	view: view, // Attaches the Locate button to the view
-					// 	graphic: new Graphic({
-					// 		symbol: {
-					// 			type: 'simple-marker',
-					// 			color: 'red',
-					// 			size: 12,
-					// 			outline: {
-					// 				// autocasts as new SimpleLineSymbol()
-					// 				width: 2,
-					// 				color: '#ffffff',
-					// 			},
-					// 		}, // overwrites the default symbol used for the
-					// 		// graphic placed at the location of the user when found
-					// 	}),
-					// });
-
-					// view.ui.add(locateWidget, 'bottom-right');
-
-					// const simplePolygonSymbol = {
-					// 	type: "simple-fill",
-					// 	outline: {
-					// 		color: [200, 0, 0],
-					// 		width: 2,
-					// 	},
-					// };
-
-					// const polygonGraphic = new Graphic({
-					// 	geometry: polygon,
-					// 	symbol: simplePolygonSymbol
-					// });
-
-					// graphicsLayer.add(polygonGraphic);
-
-					// view.when(() => {
-					// 	sketch.update(polygonGraphic);
-					// 	getArea(polygonGraphic.geometry);
-					// });
-
-					// sketch.on("create", (e) => {
-
-					// 	if (e.toolEventInfo && e.toolEventInfo.type === "vertex-add") {
-					// 		console.log(e)
-					// 	}
-					// 	// console.log(e)
-					// 	if (e.state === "start") {
-
-					// 		console.log('start: ', e);
-					// 	}
-
-					// 	if (e.state === 'complete') {
-					// 		console.log('complete: ', e);
-					// 	}
-
-					// })
-
-					// sketch.on("update", (e) => {
-					// 	const geometry = e.graphics[0].geometry;
-					// 	if (e.state === "start") {
-					// 		switchType(geometry);
-					// 	}
-
-					// 	if (e.state === "complete") {
-
-					// 		graphicsLayer.remove(graphicsLayer.graphics.getItemAt(0));
-					// 		measurements.innerHTML = null;
-					// 	}
-
-					// 	if (
-					// 		e.toolEventInfo &&
-					// 		(e.toolEventInfo.type === "scale-stop" ||
-					// 			e.toolEventInfo.type === "reshape-stop" ||
-					// 			e.toolEventInfo.type === "move-stop")
-					// 	) {
-					// 		switchType(geometry);
-					// 	}
-					// });
-
-					function createText(vertex, text) {
-						const [lon, lat] = vertex;
-
-						let textSymbol = {
-							type: 'text',
-							color: [0, 170, 255, 0.8],
-							haloColor: 'black',
-							haloSize: 1,
-							text: text,
-							xoffset: 40,
-							yoffset: 8,
-							// borderLineColor : 'red',
-							font: {
-								size: 14,
-								weight: 'bold',
-							},
-						};
-						const point = new Point({
-							longitude: lon,
-							latitude: lat,
-						});
-
-						const pointGraphic = new Graphic({
-							geometry: point,
-							symbol: textSymbol,
-						});
-
-						// view.graphics.addMany([textSymbol])
-						return pointGraphic;
-					}
-
-					function startLineDraw() {
-						let lineGraphics = [];
-						let textGraphics = [];
-
-						if (!darObj) {
-							darObj = new Draw({
-								view: view,
-							});
-						}
-
-						let action = darObj.create('polyline', {
-							mode: 'hybrid',
-						});
-
-						action.on('vertex-add', function(evt) {
-							measureLine(
-								evt.vertices,
-								evt.target.history[evt.target.history.length - 1].vertex,
-								'add'
-							);
-						});
-
-						action.on('cursor-update', function(evt) {
-							// measureLine(evt.vertices);
-						});
-
-						action.on('draw-complete', function(evt) {
-							measureLine(evt.vertices);
-							textGraphics = [];
-							lineGraphics = [];
-						});
-
-						action.on('vertex-remove', function(evt) {
-							// measureLine(evt.vertices);
-						});
-
-						function measureLine(vertices, vertex, type) {
-							view.graphics.removeAll();
-
-							let line = createLine(vertices);
-							let lineLength = geometryEngine.geodesicLength(line, 'meters');
-							let lengthText = (lineLength).toFixed(2) + '米';
-
-							let graphic = createGraphic(line);
-							if (type == 'add') {
-								let textGraphic = createText(vertex, lengthText);
-								lineGraphics = [];
-								lineGraphics.push(graphic);
-								textGraphics.push(textGraphic);
-								view.graphics.addMany([graphic, textGraphic]);
-							} else {
-								lineGraphics = [];
-								lineGraphics.push(graphic);
-								view.graphics.add(graphic);
-							}
-						}
-
-						function createLine(vertices) {
-							let polyline = new Polyline({
-								hasZ: false,
-								hasM: true,
-								paths: vertices,
-								spatialReference,
-							});
-							return polyline;
-						}
-
-						function createGraphic(line) {
-							let polylineSymbol = {
-								type: 'simple-line', // autocasts as SimpleLineSymbol()
-								color: [226, 119, 40],
-								width: 4,
-							};
-
-							return new Graphic({
-								geometry: line,
-								symbol: polylineSymbol,
-								spatialReference,
-							});
-						}
-					}
-
-					function startArea() {
-						let textGraphics = [];
-
-						if (!darObj) {
-							darObj = new Draw({
-								view: view,
-							});
-						}
-
-						let action = darObj.create('polygon', {
-							mode: 'hybrid',
-						});
-
-						action.on('vertex-add', function(evt) {
-							measureLine(evt.vertices, 'add');
-						});
-
-						// fires when the pointer moves
-						action.on('cursor-update', function(evt) {
-							// measureLine(evt.vertices);
-						});
-
-						// fires when the drawing is completed
-						action.on('draw-complete', function(evt) {
-							// measureLine(evt.vertices);
-						});
-
-						// fires when a vertex is removed
-						action.on('vertex-remove', function(evt) {
-							// measureLine(evt.vertices);
-						});
-
-						function measureLine(vertices, type) {
-							if (type === 'add') {
-								view.graphics.removeAll();
-								let area = createArea(vertices);
-								const geodesicArea = geometryEngine.geodesicArea(area, 'square-meters');
-								console.log(geodesicArea)
-								const textGraphic = createText(
-									vertices[vertices.length - 1],
-									'面积：' + Math.abs(geodesicArea).toFixed(2) + '平方米'
-								);
-
-								// let areaGraphic = createAreaGraphic(area)
-								let graphic = createGraphic(area);
-								// view.graphics.add(graphic);
-
-								textGraphics.push(textGraphic);
-								view.graphics.addMany([graphic, textGraphic]);
-							}
-						}
-
-						function createSymbol(color, style, width, outlineColor) {
-							return {
-								type: 'simple-fill',
-								style: style,
-								color: color,
-								outline: {
-									color: outlineColor,
-									width: width,
-								},
-							};
-						}
-
-						function createArea(vertices) {
-							// let polyline = {
-							// 	type: "polyline", // autocasts as new Polyline()
-							// 	paths: vertices,
-							// 	spatialReference: view.spatialReference
-							// }
-							// return polyline;
-
-							const polygon = new Polygon({
-								rings: vertices,
-								spatialReference,
-							});
-
-							return polygon;
-						}
-
-						function createGraphic(line) {
-							const fillSymbol = {
-								type: 'simple-fill', // autocasts as new SimpleFillSymbol()
-								color: [0, 170, 255, 0.8],
-								outline: {
-									// autocasts as new SimpleLineSymbol()
-									color: [255, 255, 255],
-									width: 1,
-								},
-							};
-
-							return new Graphic({
-								geometry: line,
-								symbol: fillSymbol,
-								spatialReference,
-							});
-						}
-					}
-
-					function getArea(polygon) {
-						const geodesicArea = geometryEngine.geodesicArea(polygon, 'square-kilometers');
-						// const planarArea = geometryEngine.planarArea(polygon, "square-kilometers");
-						measurements.innerHTML = '  <b>面积</b>: ' + geodesicArea.toFixed(2) + '  km\xB2';
-					}
-
-					function getLength(line) {
-						const geodesicLength = geometryEngine.geodesicLength(line, 'kilometers');
-						const planarLength = geometryEngine.planarLength(line, 'kilometers');
-						measurements.innerHTML = ' <b>长度</b>: ' + planarLength.toFixed(2) + '  km';
-						// alert(planarLength.toFixed(2))
-					}
-
-					function switchType(geom) {
-						switch (geom.type) {
-							case 'polygon':
-								getArea(geom);
-								break;
-							case 'polyline':
-								getLength(geom);
-								break;
-							default:
-								console.log('No value found');
-						}
-					}
-
-					function clear() {
-						if (darObj) {
-							darObj.reset();
-						}
+				function measureLine(vertices, type) {
+					if (type === 'add') {
 						view.graphics.removeAll();
+						let area = createArea(vertices);
+						const geodesicArea = geometryEngine.geodesicArea(area, 'square-meters');
+						console.log(geodesicArea)
+						const textGraphic = createText(
+							vertices[vertices.length - 1],
+							'面积：' + Math.abs(geodesicArea).toFixed(2) + '平方米'
+						);
+
+						// let areaGraphic = createAreaGraphic(area)
+						let graphic = createGraphic(area);
+						// view.graphics.add(graphic);
+
+						textGraphics.push(textGraphic);
+						view.graphics.addMany([graphic, textGraphic]);
 					}
+				}
 
-					// 定位
-					function startLocate() {
-						if (!locateWidget) {
-							locateWidget = new Locate({
-									view: view,
-									symbol: {
-										type: 'simple-marker',
-										color: 'red',
-										size: 12,
-										outline: {
-											// autocasts as new SimpleLineSymbol()
-											width: 2,
-											color: '#ffffff',
-										},
-									});
-							}
+				function createSymbol(color, style, width, outlineColor) {
+					return {
+						type: 'simple-fill',
+						style: style,
+						color: color,
+						outline: {
+							color: outlineColor,
+							width: width,
+						},
+					};
+				}
 
-							locateWidget.locate().then(res => {
-								console.log(res)
-							}).catch(err => {
-								console.log(err)
-							})
-						}
+				function createArea(vertices) {
+					// let polyline = {
+					// 	type: "polyline", // autocasts as new Polyline()
+					// 	paths: vertices,
+					// 	spatialReference: view.spatialReference
+					// }
+					// return polyline;
 
-						const lineBtn = document.getElementById('line-btn');
-						const areaBtn = document.getElementById('area-btn');
-						const cancelBtn = document.getElementById('cancel-btn');
-						const locateBtn = document.getElementById('locate');
-						const drawBtn = document.getElementById('draw');
-						const btnsEl = document.getElementById('btns');
-
-						lineBtn.addEventListener('click', function() {
-							clear();
-							startLineDraw();
-						});
-
-						areaBtn.addEventListener('click', function() {
-							clear();
-							startArea();
-						});
-
-						drawBtn.addEventListener('click', function() {
-							drawBtn.style.display = 'none';
-							btnsEl.style.display = 'block';
-						});
-
-						cancelBtn.addEventListener('click', function() {
-							drawBtn.style.display = 'block';
-							btnsEl.style.display = 'none';
-							clear();
-						});
-
-						locateBtn.addEventListener('click', function() {
-							startLocate();
-						})
-
-						// view.on('click', function(e) {
-						// 	console.log(e.mapPoint.latitude, e.mapPoint.longitude)
-						// })
+					const polygon = new Polygon({
+						rings: vertices,
+						spatialReference,
 					});
+
+					return polygon;
+				}
+
+				function createGraphic(line) {
+					const fillSymbol = {
+						type: 'simple-fill', // autocasts as new SimpleFillSymbol()
+						color: [0, 170, 255, 0.8],
+						outline: {
+							// autocasts as new SimpleLineSymbol()
+							color: [255, 255, 255],
+							width: 1,
+						},
+					};
+
+					return new Graphic({
+						geometry: line,
+						symbol: fillSymbol,
+						spatialReference,
+					});
+				}
+			}
+
+			function getArea(polygon) {
+				const geodesicArea = geometryEngine.geodesicArea(polygon, 'square-kilometers');
+				// const planarArea = geometryEngine.planarArea(polygon, "square-kilometers");
+				measurements.innerHTML = '  <b>面积</b>: ' + geodesicArea.toFixed(2) + '  km\xB2';
+			}
+
+			function getLength(line) {
+				const geodesicLength = geometryEngine.geodesicLength(line, 'kilometers');
+				const planarLength = geometryEngine.planarLength(line, 'kilometers');
+				measurements.innerHTML = ' <b>长度</b>: ' + planarLength.toFixed(2) + '  km';
+				// alert(planarLength.toFixed(2))
+			}
+
+			function switchType(geom) {
+				switch (geom.type) {
+					case 'polygon':
+						getArea(geom);
+						break;
+					case 'polyline':
+						getLength(geom);
+						break;
+					default:
+						console.log('No value found');
+				}
+			}
+
+			function clear() {
+				if (darObj) {
+					darObj.reset();
+				}
+				view.graphics.removeAll();
+			}
+
+			// 定位
+			function startLocate() {
+				if (!locateWidget) {
+					locateWidget = new Locate({
+						view: view,
+						symbol: {
+							type: 'simple-marker',
+							color: 'red',
+							size: 12,
+							outline: {
+								// autocasts as new SimpleLineSymbol()
+								width: 2,
+								color: '#ffffff',
+							},
+						}
+					});
+				}
+
+				locateWidget.locate().then(res => {
+					console.log(res)
+				}).catch(err => {
+					console.log(err)
+				})
+			}
+
+			const lineBtn = document.getElementById('line-btn');
+			const areaBtn = document.getElementById('area-btn');
+			const cancelBtn = document.getElementById('cancel-btn');
+			const locateBtn = document.getElementById('locate');
+			const drawBtn = document.getElementById('draw');
+			const btnsEl = document.getElementById('btns');
+
+			lineBtn.addEventListener('click', function() {
+				clear();
+				startLineDraw();
+			});
+
+			areaBtn.addEventListener('click', function() {
+				clear();
+				startArea();
+			});
+
+			drawBtn.addEventListener('click', function() {
+				drawBtn.style.display = 'none';
+				btnsEl.style.display = 'block';
+			});
+
+			cancelBtn.addEventListener('click', function() {
+				drawBtn.style.display = 'block';
+				btnsEl.style.display = 'none';
+				clear();
+			});
+
+			locateBtn.addEventListener('click', function() {
+				startLocate();
+			})
+
+			// view.on('click', function(e) {
+			// 	console.log(e.mapPoint.latitude, e.mapPoint.longitude)
+			// })
+		});
 	</script>
 </html>
